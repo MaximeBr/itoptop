@@ -8,18 +8,20 @@ import json
 class Itop(object):
     url = version = auth_user = auth_pwd = auth = data_model = None
 
-    def __init__(self, url, version, auth_user, auth_pwd, data_model=None):
+    def __init__(self, url, version, auth_user, auth_pwd, ssl_verify, data_model=None):
         """
         Create connection.
         :param url: iTop rest.php endpoint
         :param version: API version
         :param auth_user: User
         :param auth_pwd: Password
+        :param verify: verify
         """
         self.url = url
         self.version = version
         self.auth_user = auth_user
         self.auth_pwd = auth_pwd
+        self.verify = ssl_verify
         data = {
             'operation': 'core/check_credentials',
             'user': self.auth_user,
@@ -48,7 +50,8 @@ class Itop(object):
                     'auth_user': self.auth_user,
                     'auth_pwd': self.auth_pwd,
                     'json_data': json_data
-                }
+                },
+                verify = self.verify
             )
             json_return = json.loads(response.content.decode('utf-8'))
             return_code = json_return['code']
